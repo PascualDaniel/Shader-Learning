@@ -59,13 +59,37 @@ Shader "Unlit/SimpleShader"
                 return o;
             }
 
+          
+            // posterize method
+            float4 posterize(float steps, float value){
+                return floor(value*steps)/steps;
+            }
+
+
+
             fixed4 frag (VertexOutput o) : SV_Target{
               
                 float2 uv = o.uv0;
+
+                float3 green = float3(0,1,0);
+                float3 red = float3(1,0,0);
+
+                float3 color = lerp(green,red,uv.y);
+                
+                //smoothstep
+                color = smoothstep(0.3,0.7,color);
+                color = floor(color*10)/10;
+                //return float4(color,1);
+
+
+                float3 normal = normalize(o.normal); //Interpolated
+
+
                 //Direct Defuse Ligth
                 float3 ligthDir = _WorldSpaceLightPos0.xyz;
                 float3 ligthColor = _LightColor0.xyz;
-                float ligthFallOff = max(0,dot(ligthDir,o.normal));
+                float ligthFallOff = max(0,dot(ligthDir,normal));
+                ligthFallOff = posterize(3,ligthFallOff);
                 float3 directDiffuseLight = ligthColor * ligthFallOff;
                 //Ambient Light
                 float3 ambientLight = float3(0.1,0.1,0.1);
@@ -74,22 +98,19 @@ Shader "Unlit/SimpleShader"
                 float3 cameraPosition = _WorldSpaceCameraPos ;
                 float3 fragToCam = cameraPosition - o.worldPossition;
                 float3 viewDir = normalize(fragToCam);
-
-                float3 viewReflect = reflect(-viewDir,o.normal);
-
+                float3 viewReflect = reflect(-viewDir,normal);
                 float3 specularFallOff = max(0,dot(viewReflect,ligthDir));
-
                 //modify gloss
                 specularFallOff = pow(specularFallOff,_Glossiness);
+                specularFallOff = posterize(4,specularFallOff);
+                float3 directSpecularLight = ligthColor * specularFallOff;
 
-                return float4(specularFallOff.xxx,0);
-
-
+                //return float4(specularFallOff.xxx,0);
 
                 //Composite Light
                 float3 diffuseLight = ambientLight + directDiffuseLight;
 
-                float3 finalSurfaceColor = diffuseLight * _Color.rgb;
+                float3 finalSurfaceColor = diffuseLight * _Color.rgb+ directSpecularLight;
    
 
                 return float4(finalSurfaceColor,0);
