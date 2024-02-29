@@ -11,6 +11,7 @@ Shader "Fractal/Fractal Surface GPU" {
 		#pragma target 4.5
 		
 		#include "FractalGPU.hlsl"
+		
 
 		struct Input {
 			float3 worldPos;
