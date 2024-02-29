@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_SimpleShader
-  m_Shader: {fileID: 4800000, guid: 72d89ffe9697d43409ac11948956ff0d, type: 3}
+  m_Name: LightingTest
+  m_Shader: {fileID: 4800000, guid: 4a99a6fa61966244b9d2934578b2e6d1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -22,10 +22,15 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 0, y: 0}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Glossiness: 108
+    - _Gloss: 0.392
+    - _Glossiness: 1
     m_Colors:
-    - _Color: {r: 0.8490566, g: 0.42052332, b: 0.42052332, a: 0.9019608}
+    - _Color: {r: 1, g: 0.7698746, b: 0, a: 1}
   m_BuildTextureStacks: []
