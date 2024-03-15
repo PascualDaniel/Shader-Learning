@@ -1,6 +1,6 @@
-# Project Title
+# Shader Learning
 
-This is a Unity project that includes various assets and scenes made for learning shaders.
+This is a Unity project that includes various assets and scenes made for learning shaders. 
 
 ## Getting Started
 
