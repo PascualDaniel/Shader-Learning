@@ -23,14 +23,9 @@ public class NoiseVisualization : Visualization {
 
 	ComputeBuffer noiseBuffer;
 
-	[SerializeField]
-	Shape shape;
 
-	bool isDirty;
     protected override void EnableVisualization (int dataLength, MaterialPropertyBlock propertyBlock) {
-		isDirty = true;
-
-		
+	
 		noise = new NativeArray<float4>(dataLength, Allocator.Persistent);
 		noiseBuffer = new ComputeBuffer(dataLength, 4);
 	
@@ -50,7 +45,7 @@ public class NoiseVisualization : Visualization {
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	) {
 		
-
+		handle.Complete();
 		noiseBuffer.SetData(noise.Reinterpret<float>(4 * 4));
 
 	}

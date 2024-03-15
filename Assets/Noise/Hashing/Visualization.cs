@@ -8,7 +8,7 @@ using static Unity.Mathematics.math;
 public abstract class  Visualization : MonoBehaviour {
 
     static int
-		hashesId = Shader.PropertyToID("_Hashes"),
+		
 		positionsId = Shader.PropertyToID("_Positions"),
 		normalsId = Shader.PropertyToID("_Normals"),
 		configId = Shader.PropertyToID("_Config");
@@ -18,6 +18,9 @@ public abstract class  Visualization : MonoBehaviour {
 
 	[SerializeField]
 	Material material;
+
+	[SerializeField]
+	Shape shape;
 
 	[SerializeField, Range(1, 512)]
 	int resolution = 16;
@@ -35,12 +38,12 @@ public abstract class  Visualization : MonoBehaviour {
 
 	
 
+	bool isDirty;
+
 	[SerializeField, Range(-0.5f, 0.5f)]
 	float displacement = 0.1f;
 
 	Bounds bounds;
-
-	
 
 	public enum Shape { Plane, Sphere, Torus }
 
@@ -50,10 +53,7 @@ public abstract class  Visualization : MonoBehaviour {
 		Shapes.Job<Shapes.Torus>.ScheduleParallel
 	};
 
-	[SerializeField]
-	Shape shape;
-
-	bool isDirty;
+	
     void OnEnable () {
 		isDirty = true;
 
