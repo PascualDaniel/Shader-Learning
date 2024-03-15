@@ -111,18 +111,18 @@ public static class Shapes {
 
         public static JobHandle ScheduleParallel (
 			NativeArray<float3x4> positions, NativeArray<float3x4> normals,
-			int resolution, float4x4 trs, JobHandle dependency
-		) {
-            float4x4 tim = transpose(inverse(trs));
-			return new Job<S> {
-				positions = positions,
-                normals = normals,
-				resolution = resolution,
-				invResolution = 1f / resolution,
-				positionTRS = float3x4(trs.c0.xyz, trs.c1.xyz, trs.c2.xyz, trs.c3.xyz),
-				normalTRS = float3x4(tim.c0.xyz, tim.c1.xyz, tim.c2.xyz, tim.c3.xyz)
-			}.ScheduleParallel(positions.Length, resolution, dependency);
-		}
+			int resolution,	float4x4 trs, JobHandle dependency
+		//) {
+		//	float4x4 tim = transpose(inverse(trs));
+		) => new Job<S> {
+			positions = positions,
+			normals = normals,
+			resolution = resolution,
+			invResolution = 1f / resolution,
+			positionTRS = trs.Get3x4(),
+			normalTRS = transpose(inverse(trs)).Get3x4()
+		}.ScheduleParallel(positions.Length, resolution, dependency);
+		//}
 
        
 	}
