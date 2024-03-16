@@ -53,6 +53,16 @@ public abstract class  Visualization : MonoBehaviour {
 		Shapes.Job<Shapes.Torus>.ScheduleParallel
 	};
 
+
+	protected abstract void EnableVisualization (
+		int dataLength, MaterialPropertyBlock propertyBlock
+	);
+
+	protected abstract void DisableVisualization ();
+
+	protected abstract void UpdateVisualization (
+		NativeArray<float3x4> positions, int resolution, JobHandle handle
+	);
 	
     void OnEnable () {
 		isDirty = true;
@@ -92,15 +102,7 @@ public abstract class  Visualization : MonoBehaviour {
 
 
 
-	protected abstract void EnableVisualization (
-		int dataLength, MaterialPropertyBlock propertyBlock
-	);
-
-	protected abstract void DisableVisualization ();
-
-	protected abstract void UpdateVisualization (
-		NativeArray<float3x4> positions, int resolution, JobHandle handle
-	);
+	
 	void OnValidate () {
 		if (positionsBuffer  != null && enabled) {
 			OnDisable();

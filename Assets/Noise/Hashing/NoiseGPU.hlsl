@@ -14,9 +14,8 @@ void ConfigureProcedural () {
 		1.0
 	);
 	unity_ObjectToWorld._m03_m13_m23 +=
-	_Config.z * _Noise[unity_InstanceID] *
-			_Normals[unity_InstanceID];
-	unity_ObjectToWorld._m00_m11_m22 = _Config.y;
+			_Config.z * _Noise[unity_InstanceID] * _Normals[unity_InstanceID];
+		unity_ObjectToWorld._m00_m11_m22 = _Config.y;
 	#endif
 }
 

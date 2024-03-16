@@ -122,7 +122,7 @@ public static class Shapes {
 			positionTRS = trs.Get3x4(),
 			normalTRS = transpose(inverse(trs)).Get3x4()
 		}.ScheduleParallel(positions.Length, resolution, dependency);
-		//}
+	
 
        
 	}

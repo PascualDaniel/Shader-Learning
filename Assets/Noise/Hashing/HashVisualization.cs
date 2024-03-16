@@ -60,15 +60,13 @@ public class HashVisualization : Visualization {
 
 	
 
-	bool isDirty;
     protected override void EnableVisualization (int dataLength, MaterialPropertyBlock propertyBlock) {
-		isDirty = true;
+
 
 		
 		hashes = new NativeArray<uint4>(dataLength, Allocator.Persistent);
-		hashesBuffer = new ComputeBuffer(dataLength, 4);
+		hashesBuffer = new ComputeBuffer(dataLength*4, 4);
 	
-		propertyBlock ??= new MaterialPropertyBlock();
 		propertyBlock.SetBuffer(hashesId, hashesBuffer);
 
 	}
