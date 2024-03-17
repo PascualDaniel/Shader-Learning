@@ -14,6 +14,10 @@ public class NoiseVisualization : Visualization {
 	[SerializeField, Range(1, 3)]
 	int dimensions = 3;
 
+	public enum NoiseType { Perlin, Value }
+
+	[SerializeField]
+	NoiseType type;
 
 	[SerializeField]
 	int seed;
@@ -25,10 +29,17 @@ public class NoiseVisualization : Visualization {
 
 	ComputeBuffer noiseBuffer;
 
-	static ScheduleDelegate[] noiseJobs = {
-		Job<Lattice1D<Value>>.ScheduleParallel,
-		Job<Lattice2D<Value>>.ScheduleParallel,
-		Job<Lattice3D<Value>>.ScheduleParallel
+	static ScheduleDelegate[,] noiseJobs = {
+		{
+			Job<Lattice1D<Perlin>>.ScheduleParallel,
+			Job<Lattice2D<Perlin>>.ScheduleParallel,
+			Job<Lattice3D<Perlin>>.ScheduleParallel
+		},
+		{
+			Job<Lattice1D<Value>>.ScheduleParallel,
+			Job<Lattice2D<Value>>.ScheduleParallel,
+			Job<Lattice3D<Value>>.ScheduleParallel
+		}
 	};
 
 
@@ -51,7 +62,7 @@ public class NoiseVisualization : Visualization {
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	) {
 		
-		noiseJobs[dimensions - 1](
+		noiseJobs[(int)type,dimensions - 1](
 			positions, noise, seed, domain, resolution, handle
 		).Complete();
 		noiseBuffer.SetData(noise.Reinterpret<float>(4 * 4));
