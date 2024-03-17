@@ -11,6 +11,9 @@ public class NoiseVisualization : Visualization {
 
 	NativeArray<float4> noise;
 
+	[SerializeField, Range(1, 3)]
+	int dimensions = 3;
+
 
 	[SerializeField]
 	int seed;
@@ -21,6 +24,12 @@ public class NoiseVisualization : Visualization {
 	};
 
 	ComputeBuffer noiseBuffer;
+
+	static ScheduleDelegate[] noiseJobs = {
+		Job<Lattice1D>.ScheduleParallel,
+		Job<Lattice2D>.ScheduleParallel,
+		Job<Lattice3D>.ScheduleParallel
+	};
 
 
     protected override void EnableVisualization (int dataLength, MaterialPropertyBlock propertyBlock) {
@@ -42,7 +51,7 @@ public class NoiseVisualization : Visualization {
 		NativeArray<float3x4> positions, int resolution, JobHandle handle
 	) {
 		
-		Job<Lattice1D>.ScheduleParallel(
+		noiseJobs[dimensions - 1](
 			positions, noise, seed, domain, resolution, handle
 		).Complete();
 		noiseBuffer.SetData(noise.Reinterpret<float>(4 * 4));
