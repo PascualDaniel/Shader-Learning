@@ -5,8 +5,10 @@ using Unity.Mathematics;
 
 using static Unity.Mathematics.math;
 
-public static partial class Noise
-{
+public static partial class Noise {
+
+	
+
 
 	public interface INoise
 	{
