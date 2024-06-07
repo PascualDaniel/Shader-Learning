@@ -8,6 +8,8 @@ using static Unity.Mathematics.math;
 
 public class HashVisualization : Visualization {
 
+	
+
     static int
 		hashesId = Shader.PropertyToID("_Hashes");
 
