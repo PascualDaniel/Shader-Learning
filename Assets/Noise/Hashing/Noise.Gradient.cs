@@ -5,7 +5,7 @@ using static Unity.Mathematics.math;
 public static partial class Noise
 {
 
-	
+
 	public interface IGradient
 	{
 		float4 Evaluate(SmallXXHash4 hash, float4 x);
@@ -13,6 +13,8 @@ public static partial class Noise
 		float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y);
 
 		float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z);
+
+		float4 EvaluateAfterInterpolation(float4 value);
 	}
 
 	public struct Value : IGradient
@@ -24,6 +26,8 @@ public static partial class Noise
 
 		public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z) =>
 			hash.Floats01A * 2f - 1f;
+
+		public float4 EvaluateAfterInterpolation(float4 value) => value;
 	}
 
 	public struct Perlin : IGradient
@@ -47,7 +51,23 @@ public static partial class Noise
 			gy += select(-offset, offset, gy < 0f);
 			return (gx * x + gy * y + gz * z) * (1f / 0.56290f);
 		}
-	}
 
+		public float4 EvaluateAfterInterpolation(float4 value) => value;
+	}
+	public struct Turbulence<G> : IGradient where G : struct, IGradient
+	{
+
+		public float4 Evaluate(SmallXXHash4 hash, float4 x) =>
+			default(G).Evaluate(hash, x);
+
+		public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y) =>
+			default(G).Evaluate(hash, x, y);
+
+		public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z) =>
+			default(G).Evaluate(hash, x, y, z);
+
+		public float4 EvaluateAfterInterpolation(float4 value) =>
+			abs(default(G).EvaluateAfterInterpolation(value));
+	}
 
 }
