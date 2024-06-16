@@ -470,11 +470,11 @@ MonoBehaviour:
   instanceMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: b04e7eedcb5bb034c96414cec561749f, type: 2}
   shape: 0
-  resolution: 151
+  resolution: 248
   instanceScale: 2
-  displacement: 0.1
+  displacement: -0.206
   dimensions: 1
-  type: 0
+  type: 4
   noiseSettings:
     seed: 0
     frequency: 4
@@ -494,6 +494,7 @@ MonoBehaviour:
       x: 8
       y: 8
       z: 8
+  tiling: 0
 --- !u!1 &1957575428
 GameObject:
   m_ObjectHideFlags: 0
