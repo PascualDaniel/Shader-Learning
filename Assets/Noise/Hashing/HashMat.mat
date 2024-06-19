@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HashMat
-  m_Shader: {fileID: -6465566751694194690, guid: 008ba47623c213b4ab35f8aa1e4d4406, type: 3}
-  m_Parent: {fileID: -876546973899608171, guid: 008ba47623c213b4ab35f8aa1e4d4406, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: ba5ba9e15f139334ca192c51c33124cd, type: 3}
+  m_Parent: {fileID: 2100000, guid: b04e7eedcb5bb034c96414cec561749f, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
