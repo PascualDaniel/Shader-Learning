@@ -471,10 +471,10 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: b04e7eedcb5bb034c96414cec561749f, type: 2}
   shape: 1
   resolution: 248
-  instanceScale: 2
+  instanceScale: 1
   displacement: 0
   dimensions: 3
-  type: 6
+  type: 4
   noiseSettings:
     seed: 0
     frequency: 1
