@@ -19,7 +19,7 @@ namespace ProceduralMeshes.Streams {
 		NativeArray<Stream0> stream0;
 		[NativeDisableContainerSafetyRestriction]
         NativeArray<int3> triangles;
-        public void Setup (Mesh.MeshData meshData, int vertexCount, int indexCount) {
+        public void Setup (Mesh.MeshData meshData, Bounds bounds, int vertexCount, int indexCount) {
 			var descriptor = new NativeArray<VertexAttributeDescriptor>(
 				4, Allocator.Temp, NativeArrayOptions.UninitializedMemory
 			);
@@ -40,7 +40,10 @@ namespace ProceduralMeshes.Streams {
 			
 			meshData.subMeshCount = 1;
 			meshData.SetSubMesh(
-				0, new SubMeshDescriptor(0, indexCount),
+				0, new SubMeshDescriptor(0, indexCount) {
+					bounds = bounds,
+					vertexCount = vertexCount
+				},
 				MeshUpdateFlags.DontRecalculateBounds |
 				MeshUpdateFlags.DontValidateIndices
 			);
