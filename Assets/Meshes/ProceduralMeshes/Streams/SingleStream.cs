@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Unity.Collections.LowLevel.Unsafe;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -14,9 +15,9 @@ namespace ProceduralMeshes.Streams {
 			public float4 tangent;
 			public float2 texCoord0;
 		}
-		
+		[NativeDisableContainerSafetyRestriction]
 		NativeArray<Stream0> stream0;
-
+		[NativeDisableContainerSafetyRestriction]
         NativeArray<int3> triangles;
         public void Setup (Mesh.MeshData meshData, int vertexCount, int indexCount) {
 			var descriptor = new NativeArray<VertexAttributeDescriptor>(
@@ -38,7 +39,11 @@ namespace ProceduralMeshes.Streams {
 			meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt32);
 			
 			meshData.subMeshCount = 1;
-			meshData.SetSubMesh(0, new SubMeshDescriptor(0, indexCount));
+			meshData.SetSubMesh(
+				0, new SubMeshDescriptor(0, indexCount),
+				MeshUpdateFlags.DontRecalculateBounds |
+				MeshUpdateFlags.DontValidateIndices
+			);
             
 
             stream0 = meshData.GetVertexData<Stream0>();
