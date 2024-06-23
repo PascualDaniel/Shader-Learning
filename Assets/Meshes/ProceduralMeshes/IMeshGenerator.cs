@@ -13,5 +13,7 @@ namespace ProceduralMeshes {
 		int IndexCount { get; }
 		int JobLength { get; }
 
+		int Resolution { get; set; }
+
 	}
 }

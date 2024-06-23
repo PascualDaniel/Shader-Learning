@@ -7,13 +7,16 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralMesh : MonoBehaviour {
 
+	[SerializeField, Range(1, 10)]
+	int resolution = 1;
+
     Mesh mesh;
 
 	void Awake () {
 		mesh = new Mesh {
 			name = "Procedural Mesh"
 		};
-		GenerateMesh();
+		//GenerateMesh();
 		GetComponent<MeshFilter>().mesh = mesh;
 	}
 	
@@ -22,9 +25,17 @@ public class ProceduralMesh : MonoBehaviour {
 		Mesh.MeshData meshData = meshDataArray[0];
 
 		MeshJob<SquareGrid, MultiStream>.ScheduleParallel(
-			mesh,meshData, default
+			mesh,meshData, resolution, default
 		).Complete();
 
 		Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh);
     }
+
+	void OnValidate () => enabled = true;
+
+	void Update () {
+		GenerateMesh();
+		enabled = false;
+	}
+
 }
