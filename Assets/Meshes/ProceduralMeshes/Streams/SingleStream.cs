@@ -18,7 +18,7 @@ namespace ProceduralMeshes.Streams {
 		[NativeDisableContainerSafetyRestriction]
 		NativeArray<Stream0> stream0;
 		[NativeDisableContainerSafetyRestriction]
-        NativeArray<int3> triangles;
+        NativeArray<TriangleUInt16> triangles;
         public void Setup (Mesh.MeshData meshData, Bounds bounds, int vertexCount, int indexCount) {
 			var descriptor = new NativeArray<VertexAttributeDescriptor>(
 				4, Allocator.Temp, NativeArrayOptions.UninitializedMemory
@@ -36,7 +36,7 @@ namespace ProceduralMeshes.Streams {
 			meshData.SetVertexBufferParams(vertexCount, descriptor);
 			descriptor.Dispose();
 
-			meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt32);
+			meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
 			
 			meshData.subMeshCount = 1;
 			meshData.SetSubMesh(
@@ -50,7 +50,7 @@ namespace ProceduralMeshes.Streams {
             
 
             stream0 = meshData.GetVertexData<Stream0>();
-            triangles = meshData.GetIndexData<int>().Reinterpret<int3>(4);
+            triangles = meshData.GetIndexData<ushort>().Reinterpret<TriangleUInt16>(2);
 		}
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertex (int index, Vertex vertex) => stream0[index] = new Stream0 {
