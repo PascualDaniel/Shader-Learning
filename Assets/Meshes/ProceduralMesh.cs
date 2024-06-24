@@ -19,7 +19,7 @@ public class ProceduralMesh : MonoBehaviour {
 	[SerializeField]
 	MeshType meshType;
 
-	[SerializeField, Range(1, 10)]
+	[SerializeField, Range(1, 50)]
 	int resolution = 1;
 
     Mesh mesh;
