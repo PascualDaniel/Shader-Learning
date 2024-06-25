@@ -21,7 +21,7 @@ namespace ProceduralMeshes.Generators
 
 		public void Execute<S>(int z, S streams) where S : struct, IMeshStreams
 		{
-			int vi = (Resolution + 1) * z, ti = 2 * Resolution * (z - 1);;
+			int vi = (Resolution + 1) * z, ti = 2 * Resolution * (z - 1);
 
 			float xOffset = -0.25f;
 			float uOffset = 0f;
