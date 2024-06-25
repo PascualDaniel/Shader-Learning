@@ -11,7 +11,7 @@ namespace ProceduralMeshes.Generators
 		public int VertexCount => 7 * Resolution * Resolution;
 		public int IndexCount => 18 * Resolution * Resolution;
 
-		public int JobLength => Resolution+ 1;
+		public int JobLength => Resolution;
 
 		public int Resolution { get; set; }
 
