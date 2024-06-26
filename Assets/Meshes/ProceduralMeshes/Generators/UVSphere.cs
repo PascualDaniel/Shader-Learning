@@ -20,22 +20,24 @@ namespace ProceduralMeshes.Generators
 		public void Execute<S> (int u, S streams) where S : struct, IMeshStreams {
 			int vi = (Resolution + 1) * u, ti = 2 * Resolution * (u - 1);
 
-			var vertex = new Vertex();
-			
-			
+			var vertex = new Vertex();	
+			vertex.position.y = vertex.normal.y = -1f;
 			vertex.tangent.w = -1f;
 			
-			vertex.position.x = sin(2f * PI * u / Resolution);
-			vertex.position.z = -cos(2f * PI * u / Resolution);
-			vertex.normal = vertex.position;
-			vertex.tangent.x = -vertex.position.z;
-			vertex.tangent.z = vertex.position.x;
+			float2 circle;
+			circle.x = sin(2f * PI * u / Resolution);
+			circle.y = cos(2f * PI * u / Resolution);
+			vertex.tangent.xz = circle.yx;
+			circle.y = -circle.y;
 			vertex.texCoord0.x = (float)u / Resolution;
 			streams.SetVertex(vi, vertex);
 			vi += 1;
 
 			for (int v = 1; v <= Resolution; v++, vi++, ti += 2) {
-				vertex.position.y = (float)v / Resolution ;
+				float circleRadius = sin(PI * v / Resolution);
+				vertex.position.xz = circle * circleRadius;
+				vertex.position.y = -cos(PI * v / Resolution);
+				vertex.normal = vertex.position;
 				vertex.texCoord0.y = (float)v / Resolution;
 				streams.SetVertex(vi, vertex);
 
