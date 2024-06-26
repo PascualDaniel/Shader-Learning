@@ -15,6 +15,14 @@ public class ProceduralMesh : MonoBehaviour {
 
 	Vector3[] vertices, normals;
 	Vector4[] tangents;
+
+	public enum MaterialMode { Flat, Ripple, LatLonMap }
+
+	[SerializeField]
+	MaterialMode material;
+
+	[SerializeField]
+	Material[] materials;
 	
 	static MeshJobScheduleDelegate[] jobs = {
 		MeshJob<SquareGrid, SingleStream>.ScheduleParallel,
@@ -65,6 +73,8 @@ public class ProceduralMesh : MonoBehaviour {
 		vertices = null;
 		normals = null;
 		tangents = null;
+
+		GetComponent<MeshRenderer>().material = materials[(int)material];
 	}
 
 	void OnDrawGizmos () {
