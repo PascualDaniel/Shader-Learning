@@ -6,6 +6,9 @@ using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralMesh : MonoBehaviour {
+
+	Vector3[] vertices, normals;
+	Vector4[] tangents;
 	
 	static MeshJobScheduleDelegate[] jobs = {
 		MeshJob<SquareGrid, SingleStream>.ScheduleParallel,
@@ -26,12 +29,13 @@ public class ProceduralMesh : MonoBehaviour {
 	int resolution = 1;
 
     Mesh mesh;
+	
 
 	void Awake () {
 		mesh = new Mesh {
 			name = "Procedural Mesh"
 		};
-		//GenerateMesh();
+		
 		GetComponent<MeshFilter>().mesh = mesh;
 	}
 	
@@ -49,6 +53,25 @@ public class ProceduralMesh : MonoBehaviour {
 	void Update () {
 		GenerateMesh();
 		enabled = false;
+
+		vertices = mesh.vertices;
+		normals = mesh.normals;
+		tangents = mesh.tangents;
+	}
+
+	void OnDrawGizmos () {
+		if (mesh == null) {
+			return;
+		}
+		for (int i = 0; i < vertices.Length; i++) {
+			Vector3 position = vertices[i];
+			Gizmos.color = Color.cyan;
+			Gizmos.DrawSphere(position, 0.02f);
+			Gizmos.color = Color.green;
+			Gizmos.DrawRay(position, normals[i] * 0.2f);
+			Gizmos.color = Color.red;
+			Gizmos.DrawRay(position, tangents[i] * 0.2f);
+		}
 	}
 
 }
