@@ -16,7 +16,7 @@ public class ProceduralMesh : MonoBehaviour {
 	Vector3[] vertices, normals;
 	Vector4[] tangents;
 
-	public enum MaterialMode { Flat, Ripple, LatLonMap }
+	public enum MaterialMode { Flat, Ripple, LatLonMap,CubeMap }
 
 	[SerializeField]
 	MaterialMode material;
