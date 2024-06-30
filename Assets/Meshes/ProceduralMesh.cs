@@ -13,7 +13,10 @@ public class ProceduralMesh : MonoBehaviour {
 	[SerializeField]
 	GizmoMode gizmos;
 
+	[System.NonSerialized]
 	Vector3[] vertices, normals;
+
+	[System.NonSerialized]
 	Vector4[] tangents;
 
 	public enum MaterialMode { Flat, Ripple, LatLonMap,CubeMap }
@@ -31,12 +34,13 @@ public class ProceduralMesh : MonoBehaviour {
 		MeshJob<PointyHexagonGrid, SingleStream>.ScheduleParallel,
 		MeshJob<FlatHexagonGrid, SingleStream>.ScheduleParallel,
 		MeshJob<CubeSphere, SingleStream>.ScheduleParallel,
+		MeshJob<SharedCubeSphere, PositionStream>.ScheduleParallel,
 		MeshJob<UVSphere, SingleStream>.ScheduleParallel
 	};
 
 	public enum MeshType {
 		SquareGrid, SharedSquareGrid, SharedTriangleGrid,
-		PointyHexagonGrid,FlatHexagonGrid,CubeSphere, UVSphere
+		PointyHexagonGrid,FlatHexagonGrid,CubeSphere,SharedCubeSphere, UVSphere
 	};
 
 	[SerializeField]
@@ -91,10 +95,16 @@ public class ProceduralMesh : MonoBehaviour {
 			vertices = mesh.vertices;
 		}
 		if (drawNormals && normals == null) {
-			normals = mesh.normals;
+			drawNormals = mesh.HasVertexAttribute(VertexAttribute.Normal);
+			if (drawNormals) {
+				normals = mesh.normals;
+			}
 		}
 		if (drawTangents && tangents == null) {
-			tangents = mesh.tangents;
+			drawTangents = mesh.HasVertexAttribute(VertexAttribute.Tangent);
+			if (drawTangents) {
+				tangents = mesh.tangents;
+			}
 		}
 
 		Transform t = transform;
