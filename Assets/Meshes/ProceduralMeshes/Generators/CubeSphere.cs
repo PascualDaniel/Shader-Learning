@@ -72,6 +72,8 @@ namespace ProceduralMeshes.Generators
 			}
 		};
 
+		static float3 CubeToSphere (float3 p) => normalize(p);
+
 		public Bounds Bounds => new Bounds(Vector3.zero, new Vector3(2f, 2f, 2f));
 
 		public void Execute<S> (int i, S streams) where S : struct, IMeshStreams {
@@ -83,28 +85,33 @@ namespace ProceduralMeshes.Generators
 
 			float3 uA = side.uvOrigin + side.uVector * u / Resolution;
 			float3 uB = side.uvOrigin + side.uVector * (u + 1) / Resolution;
-			float3 pA = uA, pB = uB;
+			float3 pA = CubeToSphere(uA), pB = CubeToSphere(uB);
+
+			
 
 			for (int v = 1; v <= Resolution; v++, vi += 4, ti += 2) {
-				float3 pC = uA + side.vVector * v / Resolution;
-				float3 pD = uB + side.vVector * v / Resolution;
+				float3 pC = CubeToSphere(uA + side.vVector * v / Resolution);
+				float3 pD = CubeToSphere(uB + side.vVector * v / Resolution);
 				
 				var vertex = new Vertex();
-				vertex.normal = side.normal;
 				vertex.tangent = side.tangent;
 
 				vertex.position = pA;
+				vertex.normal = pA;
 				streams.SetVertex(vi + 0, vertex);
 
 				vertex.position = pB;
+				vertex.normal = pB;
 				vertex.texCoord0 = float2(1f, 0f);
 				streams.SetVertex(vi + 1, vertex);
 
 				vertex.position = pC;
+				vertex.normal = pC;
 				vertex.texCoord0 = float2(0f, 1f);
 				streams.SetVertex(vi + 2, vertex);
 
 				vertex.position = pD;
+				vertex.normal = pD;
 				vertex.texCoord0 = 1f;
 				streams.SetVertex(vi + 3, vertex);
 
