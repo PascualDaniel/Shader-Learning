@@ -22,19 +22,61 @@ namespace ProceduralMeshes.Generators
 			public float3 normal;
 			public float4 tangent;
 		}
-
-		public Bounds Bounds => new Bounds(Vector3.zero, new Vector3(2f, 2f, 2f));
-
-		public void Execute<S> (int i, S streams) where S : struct, IMeshStreams {
-			int u = i / 6;
-			var side = new Side {
-				id = i - 6 * u,
+		static Side GetSide (int id) => id switch {
+			0 => new Side {
+				id = id,
 				uvOrigin = -1f,
 				uVector = 2f * right(),
 				vVector = 2f * up(),
 				normal = back(),
 				tangent = float4(1f, 0f, 0f, -1f)
-			};
+			},
+			1 => new Side { 
+				id = id,
+				uvOrigin = float3(1f, -1f, -1f),
+				uVector = 2f * forward(),
+				vVector = 2f * up(),
+				normal = right(),
+				tangent = float4(0f, 0f, 1f, -1f)
+			 },
+			2 => new Side {
+				uvOrigin = -1f,
+				uVector = 2f * forward(),
+				vVector = 2f * right(),
+				normal = down(),
+				tangent = float4(0f, 0f, 1f, -1f)
+			 },
+			 3 => new Side { 
+				id = id,
+				uvOrigin = float3(-1f, -1f, 1f),
+				uVector = 2f * up(),
+				vVector = 2f * right(),
+				normal = forward(),
+				tangent = float4(0f, 1f, 0f, -1f)
+			},
+			4 => new Side {
+				id = id,
+				uvOrigin = -1f,
+				uVector = 2f * up(),
+				vVector = 2f * forward(),
+				normal = left(),
+				tangent = float4(0f, 1f, 0f, -1f) 
+			},
+			_ => new Side {
+				id = id,
+				uvOrigin = float3(-1f, 1f, -1f),
+				uVector = 2f * right(),
+				vVector = 2f * forward(),
+				normal = up(),
+				tangent = float4(1f, 0f, 0f, -1f)
+			}
+		};
+
+		public Bounds Bounds => new Bounds(Vector3.zero, new Vector3(2f, 2f, 2f));
+
+		public void Execute<S> (int i, S streams) where S : struct, IMeshStreams {
+			int u = i / 6;
+			Side side = GetSide(i - 6 * u);
 
 			int vi = 4 * Resolution * (Resolution * side.id + u);
 			int ti = 2 * Resolution * (Resolution * side.id + u);
