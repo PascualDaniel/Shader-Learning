@@ -60,7 +60,9 @@ namespace ProceduralMeshes.Generators
 			}
 		};
 
-		static float3 CubeToSphere (float3 p) => normalize(p);
+		static float3 CubeToSphere (float3 p) => p * sqrt(
+			1f - ((p * p).yxx + (p * p).zzy) / 2f + (p * p).yxx * (p * p).zzy / 3f
+		);
 
 		public Bounds Bounds => new Bounds(Vector3.zero, new Vector3(2f, 2f, 2f));
 
