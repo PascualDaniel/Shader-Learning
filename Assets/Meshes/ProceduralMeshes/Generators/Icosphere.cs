@@ -47,9 +47,6 @@ namespace ProceduralMeshes.Generators
 			highRightCorner = GetCorner(2 * id + 1, 1)
 		};
 
-		static float3 CubeToSphere(float3 p) => p * sqrt(
-			1f - ((p * p).yxx + (p * p).zzy) / 2f + (p * p).yxx * (p * p).zzy / 3f
-		);
 
 		public Bounds Bounds => new Bounds(Vector3.zero, new Vector3(2f, 2f, 2f));
 		
@@ -95,7 +92,6 @@ namespace ProceduralMeshes.Generators
 			float3 columnHighStart = strip.lowLeftCorner + columnHighDir * u / Resolution;
 			float3 columnHighEnd = strip.highLeftCorner + columnHighDir * u / Resolution;
 
-
 			float3 columnTopDir = up() - strip.highLeftCorner;
 			float3 columnTopStart =
 				strip.highRightCorner + columnTopDir * ((float)u / Resolution - 1f);
@@ -112,26 +108,24 @@ namespace ProceduralMeshes.Generators
 			streams.SetVertex(vi, vertex);
 			vi += 1;
 
-			for (int v = 1; v < ResolutionV; v++, vi++, ti += 2) 
-			{
-				if (v <= Resolution - u)
-				{
+			for (int v = 1; v < ResolutionV; v++, vi++, ti += 2) {
+				if (v <= Resolution - u) {
 					vertex.position =
 						lerp(columnBottomStart, columnBottomEnd, (float)v / Resolution);
 				}
 				else if (v < Resolution) {
-					vertex.position = 0f;
+					vertex.position =
+						lerp(columnLowStart, columnLowEnd, (float)v / Resolution);
 				}
 				else if (v <= ResolutionV - u) {
-					vertex.position =lerp(columnHighStart, columnHighEnd, (float)v / Resolution - 1f);
+					vertex.position =
+						lerp(columnHighStart, columnHighEnd, (float)v / Resolution - 1f);
 				}
-				else
-				{
+				else {
 					vertex.position =
 						lerp(columnTopStart, columnTopEnd, (float)v / Resolution - 1f);
 				}
-				
-				
+				vertex.position = normalize(vertex.position);
 				streams.SetVertex(vi, vertex);
 				streams.SetTriangle(ti + 0, quad.xyz);
 				streams.SetTriangle(ti + 1, quad.xzw);
@@ -145,7 +139,6 @@ namespace ProceduralMeshes.Generators
 				quad.z = ResolutionV * Resolution * (strip.id == 0 ? 5 : strip.id) -
 					Resolution + u + 1;
 			}
-
 			quad.w = u < Resolution ? quad.z + 1 : 1;
 
 			streams.SetTriangle(ti + 0, quad.xyz);
