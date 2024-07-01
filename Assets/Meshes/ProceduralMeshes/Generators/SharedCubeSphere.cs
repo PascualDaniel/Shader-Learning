@@ -8,7 +8,7 @@ namespace ProceduralMeshes.Generators
 
 	public struct SharedCubeSphere : IMeshGenerator
 	{
-		public int VertexCount => 6 * 4 * Resolution * Resolution;
+		public int VertexCount => 6 * Resolution * Resolution + 2;
 
 		public int IndexCount => 6 * 6 * Resolution * Resolution;
 
@@ -19,44 +19,51 @@ namespace ProceduralMeshes.Generators
 		struct Side {
 			public int id;
 			public float3 uvOrigin, uVector, vVector;
-
+			public int seamStep;
+			public bool TouchesMinimumPole => (id & 1) == 0;
 		}
 		static Side GetSide (int id) => id switch {
 			0 => new Side {
 				id = id,
 				uvOrigin = -1f,
 				uVector = 2f * right(),
-				vVector = 2f * up()
+				vVector = 2f * up(),
+				seamStep = 4
 			},
 			1 => new Side {
 				id = id,
 				uvOrigin = float3(1f, -1f, -1f),
 				uVector = 2f * forward(),
-				vVector = 2f * up()
+				vVector = 2f * up(),
+				seamStep = 4
 			},
 			2 => new Side {
 				id = id,
 				uvOrigin = -1f,
 				uVector = 2f * forward(),
-				vVector = 2f * right()
+				vVector = 2f * right(),
+				seamStep = -2
 			},
 			3 => new Side {
 				id = id,
 				uvOrigin = float3(-1f, -1f, 1f),
 				uVector = 2f * up(),
-				vVector = 2f * right()
+				vVector = 2f * right(),
+				seamStep = -2
 			},
 			4 => new Side {
 				id = id,
 				uvOrigin = -1f,
 				uVector = 2f * up(),
-				vVector = 2f * forward()
+				vVector = 2f * forward(),
+				seamStep = -2
 			},
 			_ => new Side {
 				id = id,
 				uvOrigin = float3(-1f, 1f, -1f),
 				uVector = 2f * right(),
-				vVector = 2f * forward()
+				vVector = 2f * forward(),
+				seamStep = -2
 			}
 		};
 
@@ -70,43 +77,50 @@ namespace ProceduralMeshes.Generators
 			int u = i / 6;
 			Side side = GetSide(i - 6 * u);
 
-			int vi = 4 * Resolution * (Resolution * side.id + u);
+			int vi = Resolution * (Resolution * side.id + u) + 2;
 			int ti = 2 * Resolution * (Resolution * side.id + u);
+			bool firstColumn = u == 0;
+			u += 1;
 
-			float3 uA = side.uvOrigin + side.uVector * u / Resolution;
-			float3 uB = side.uvOrigin + side.uVector * (u + 1) / Resolution;
-			float3 pA = CubeToSphere(uA), pB = CubeToSphere(uB);
+
+			float3 pStart = side.uvOrigin + side.uVector * u / Resolution;
 
 			var vertex = new Vertex();
-			
+			if (i == 0) {
+				vertex.position = -sqrt(1f / 3f);
+				streams.SetVertex(0, vertex);
+				vertex.position = sqrt(1f / 3f);
+				streams.SetVertex(1, vertex);
+			}
 
-			for (int v = 1; v <= Resolution; v++, vi += 4, ti += 2) {
-				float3 pC = CubeToSphere(uA + side.vVector * v / Resolution);
-				float3 pD = CubeToSphere(uB + side.vVector * v / Resolution);
-				
-				
+			vertex.position = CubeToSphere(pStart);
+			streams.SetVertex(vi, vertex);
+			var triangle = int3(
+				vi,
+				firstColumn && side.TouchesMinimumPole ? 0 : vi - Resolution,
+				vi + (firstColumn ?
+					side.TouchesMinimumPole ?
+						side.seamStep * Resolution * Resolution :
+						Resolution == 1 ? side.seamStep : -Resolution + 1 :
+					-Resolution + 1
+				)
+			);
+			streams.SetTriangle(ti, triangle);
+			streams.SetTriangle(ti + 1, 0);
+			vi += 1;
+			ti += 2;
 
-				vertex.position = pA;
-				
-				streams.SetVertex(vi + 0, vertex);
+			for (int v = 1; v < Resolution; v++, vi++, ti += 2)  {
+				vertex.position = CubeToSphere(pStart + side.vVector * v / Resolution);
+				streams.SetVertex(vi, vertex);
 
-				vertex.position = pB;
-				
-				streams.SetVertex(vi + 1, vertex);
-
-				vertex.position = pC;
-				
-				streams.SetVertex(vi + 2, vertex);
-
-				vertex.position = pD;
-				
-				streams.SetVertex(vi + 3, vertex);
-
-				streams.SetTriangle(ti + 0, 0);
+				triangle += 1;
+				triangle.x += 1;
+				triangle.y = triangle.z;
+				triangle.z += firstColumn && side.TouchesMinimumPole ? Resolution : 1;
+				streams.SetTriangle(ti + 0, triangle);
 				streams.SetTriangle(ti + 1, 0);
 
-				pA = pC;
-				pB = pD;
 			}
 		}
 	}

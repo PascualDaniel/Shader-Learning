@@ -226,7 +226,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: c92f6587ac563d644a2bd4fb08926aef, type: 2}
   - {fileID: 2100000, guid: 6127cd01857011c42ac22eb480fd89df, type: 2}
   - {fileID: 2100000, guid: aedaa72d1cabc5e4986a2b58941e79cd, type: 2}
-  meshType: 5
+  meshType: 6
   resolution: 4
 --- !u!1 &369017250
 GameObject:
