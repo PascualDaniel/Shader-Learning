@@ -78,7 +78,7 @@ namespace ProceduralMeshes.Generators
 			float3 pA = CubeToSphere(uA), pB = CubeToSphere(uB);
 
 			var vertex = new Vertex();
-			vertex.tangent = float4(normalize(pB - pA), -1f);
+			
 
 			for (int v = 1; v <= Resolution; v++, vi += 4, ti += 2) {
 				float3 pC = CubeToSphere(uA + side.vVector * v / Resolution);
@@ -87,29 +87,23 @@ namespace ProceduralMeshes.Generators
 				
 
 				vertex.position = pA;
-				vertex.normal = normalize(cross(pC - pA, vertex.tangent.xyz));
-				vertex.texCoord0 = 0f;
+				
 				streams.SetVertex(vi + 0, vertex);
 
 				vertex.position = pB;
-				vertex.normal = normalize(cross(pD - pB, vertex.tangent.xyz));
-				vertex.texCoord0 = float2(1f, 0f);
+				
 				streams.SetVertex(vi + 1, vertex);
 
 				vertex.position = pC;
 				
-				vertex.tangent.xyz = normalize(pD - pC);
-				vertex.normal = normalize(cross(pC - pA, vertex.tangent.xyz));
-				vertex.texCoord0 = float2(0f, 1f);
 				streams.SetVertex(vi + 2, vertex);
 
 				vertex.position = pD;
-				vertex.normal = normalize(cross(pD - pB, vertex.tangent.xyz));
 				
 				streams.SetVertex(vi + 3, vertex);
 
-				streams.SetTriangle(ti + 0, vi + int3(0, 2, 1));
-				streams.SetTriangle(ti + 1, vi + int3(1, 2, 3));
+				streams.SetTriangle(ti + 0, 0);
+				streams.SetTriangle(ti + 1, 0);
 
 				pA = pC;
 				pB = pD;
