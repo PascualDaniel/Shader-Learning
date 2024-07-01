@@ -46,12 +46,14 @@ public class ProceduralMesh : MonoBehaviour {
 		MeshJob<FlatHexagonGrid, SingleStream>.ScheduleParallel,
 		MeshJob<CubeSphere, SingleStream>.ScheduleParallel,
 		MeshJob<SharedCubeSphere, PositionStream>.ScheduleParallel,
+		MeshJob<Octasphere, SingleStream>.ScheduleParallel,
 		MeshJob<UVSphere, SingleStream>.ScheduleParallel
 	};
 
 	public enum MeshType {
 		SquareGrid, SharedSquareGrid, SharedTriangleGrid,
-		PointyHexagonGrid,FlatHexagonGrid,CubeSphere,SharedCubeSphere, UVSphere
+		PointyHexagonGrid,FlatHexagonGrid,CubeSphere,SharedCubeSphere,
+		Octasphere,  UVSphere
 	};
 
 	[SerializeField]
