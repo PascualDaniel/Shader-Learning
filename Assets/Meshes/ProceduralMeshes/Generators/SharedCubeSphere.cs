@@ -110,6 +110,13 @@ namespace ProceduralMeshes.Generators
 			vi += 1;
 			ti += 2;
 
+			int zAdd = firstColumn && side.TouchesMinimumPole ? Resolution : 1;
+			int zAddLast = firstColumn && side.TouchesMinimumPole ?
+				Resolution :
+				!firstColumn && !side.TouchesMinimumPole ?
+					Resolution * ((side.seamStep + 1) * Resolution - u) + u :
+					(side.seamStep + 1) * Resolution * Resolution - Resolution + 1;
+
 			for (int v = 1; v < Resolution; v++, vi++, ti += 2)  {
 				vertex.position = CubeToSphere(pStart + side.vVector * v / Resolution);
 				streams.SetVertex(vi, vertex);
@@ -117,7 +124,8 @@ namespace ProceduralMeshes.Generators
 				triangle += 1;
 				triangle.x += 1;
 				triangle.y = triangle.z;
-				triangle.z += firstColumn && side.TouchesMinimumPole ? Resolution : 1;
+				triangle.z += v == Resolution - 1 ? zAddLast : zAdd;
+				
 				streams.SetTriangle(ti + 0, triangle);
 				streams.SetTriangle(ti + 1, 0);
 
