@@ -7,6 +7,14 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralMesh : MonoBehaviour {
 
+	[System.Flags]
+	public enum MeshOptimizationMode {
+		Nothing = 0, ReorderIndices = 1, ReorderVertices = 0b10
+	}
+
+	[SerializeField]
+	MeshOptimizationMode meshOptimization;
+
 	[System.NonSerialized]
 	int[] triangles;
 
@@ -70,6 +78,16 @@ public class ProceduralMesh : MonoBehaviour {
 		jobs[(int)meshType](mesh, meshData, resolution, default).Complete();
 
 		Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh);
+
+		if (meshOptimization == MeshOptimizationMode.ReorderIndices) {
+			mesh.OptimizeIndexBuffers();
+		}
+		else if (meshOptimization == MeshOptimizationMode.ReorderVertices) {
+			mesh.OptimizeReorderVertexBuffer();
+		}
+		else if (meshOptimization != MeshOptimizationMode.Nothing) {
+			mesh.Optimize();
+		}
     }
 
 	void OnValidate () => enabled = true;
