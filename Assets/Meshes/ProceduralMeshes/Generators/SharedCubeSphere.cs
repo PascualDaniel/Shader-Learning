@@ -76,7 +76,6 @@ namespace ProceduralMeshes.Generators
 		public void Execute<S> (int i, S streams) where S : struct, IMeshStreams {
 			int u = i / 6;
 			Side side = GetSide(i - 6 * u);
-
 			int vi = Resolution * (Resolution * side.id + u) + 2;
 			int ti = 2 * Resolution * (Resolution * side.id + u);
 			bool firstColumn = u == 0;
@@ -84,7 +83,7 @@ namespace ProceduralMeshes.Generators
 
 
 			float3 pStart = side.uvOrigin + side.uVector * u / Resolution;
-
+			
 			var vertex = new Vertex();
 			if (i == 0) {
 				vertex.position = -sqrt(1f / 3f);
@@ -106,9 +105,9 @@ namespace ProceduralMeshes.Generators
 				)
 			);
 			streams.SetTriangle(ti, triangle);
-			streams.SetTriangle(ti + 1, 0);
+			
 			vi += 1;
-			ti += 2;
+			ti += 1;
 
 			int zAdd = firstColumn && side.TouchesMinimumPole ? Resolution : 1;
 			int zAddLast = firstColumn && side.TouchesMinimumPole ?
@@ -117,19 +116,23 @@ namespace ProceduralMeshes.Generators
 					Resolution * ((side.seamStep + 1) * Resolution - u) + u :
 					(side.seamStep + 1) * Resolution * Resolution - Resolution + 1;
 
-			for (int v = 1; v < Resolution; v++, vi++, ti += 2)  {
+			for (int v = 1; v < Resolution; v++, vi++, ti += 2) {
 				vertex.position = CubeToSphere(pStart + side.vVector * v / Resolution);
 				streams.SetVertex(vi, vertex);
 
-				triangle += 1;
 				triangle.x += 1;
 				triangle.y = triangle.z;
 				triangle.z += v == Resolution - 1 ? zAddLast : zAdd;
-				
-				streams.SetTriangle(ti + 0, triangle);
-				streams.SetTriangle(ti + 1, 0);
-
+				streams.SetTriangle(ti + 0, int3(triangle.x - 1, triangle.y, triangle.x));
+				streams.SetTriangle(ti + 1, triangle);
 			}
+			streams.SetTriangle(ti, int3(
+				triangle.x,
+				triangle.z,
+				side.TouchesMinimumPole ?
+					triangle.z + Resolution :
+					u == Resolution ? 1 : triangle.z + 1
+			));
 		}
 	}
 }
